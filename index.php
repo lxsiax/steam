@@ -7,7 +7,8 @@
 </head>
 <body>
     <?php
-    $pdo = new PDO('pgsql:host=localhost;dbname=steam', 'steam', 'steam');
+    require 'auxiliar.php';
+    $pdo = conectar();
     $pdo->exec("SET NAMES 'UTF8'");
     $sent = $pdo->query('SELECT * FROM cliente');
     ?>
