@@ -9,7 +9,7 @@
     <?php
     $pdo = new PDO('pgsql:host=localhost;dbname=steam', 'steam', 'steam');
     $pdo->exec("SET NAMES 'UTF8'");
-    $sent = $pdo->query('SELECT * FROM clientes');
+    $sent = $pdo->query('SELECT * FROM cliente');
     ?>
 
     <table border="1">
@@ -20,6 +20,7 @@
             <th>Dirección</th>
             <th>Código Postal</th>
             <th>Teléfono</th>
+            <th>Acciones</th>
         </thead>
         <tbody>
             <?php foreach ($sent as $fila): ?>
@@ -30,20 +31,26 @@
                 <td><?= $fila['direccion'] ?></td>
                 <td><?= $fila['codpostal'] ?></td>
                 <td><?= $fila['telefono'] ?></td>
+                <td>
+                    <form action="borrar.php" method="post">
+                        <input type="hidden" name="id" value="<?= $fila['id'] ?>">
+                        <button type="submit">Borrar</button>
+                    </form>    
+                </td>
             </tr>
             <?php endforeach ?>
         </tbody>
     </table>
     <br>
     <?php 
-    $juegos = $pdo->query('SELECT * FROM juegos');
+    $juegos = $pdo->query('SELECT * FROM juego');
     ?>
 
-    <table border="1">
+    <table border="1" >
         <thead>
             <th>Nombre</th>
             <th>Género</th>
-            <th>Fecha de publicación</th>
+            <th>Fecha y hora publicación</th>
             <th>Precio</th>
         </thead>
         <tbody>
