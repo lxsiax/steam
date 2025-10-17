@@ -9,8 +9,7 @@
     <?php
     require 'auxiliar.php';
     $pdo = conectar();
-    $pdo->exec("SET NAMES 'UTF8'");
-    $sent = $pdo->query('SELECT * FROM cliente');
+    $sent = $pdo->query('SELECT * FROM clientes');
     ?>
 
     <table border="1">
@@ -65,5 +64,7 @@
             <?php endforeach ?>
         </tbody>
     </table>
+    <br>    
+    <a href="insertar.php">Insertar un nuevo cliente</a>
 </body>
 </html>
