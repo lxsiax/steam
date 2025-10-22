@@ -26,23 +26,24 @@
         validar_codpostal($codpostal, $error); 
         validar_telefono($telefono, $error);
 
-        $con = conectar();
-        $sent = $con->prepare('INSERT INTO clientes (dni,nombre, apellidos, direccion, codpostal,telefono)
-                               VALUES (:dni, :nombre, :apellidos, :direccion, :codpostal, :telefono)');
+        if (empty($error)) {
+            $pdo = conectar();
+            $sent = $pdo->prepare('INSERT INTO clientes (dni, nombre, apellidos, direccion, codpostal, telefono)
+                                   VALUES (:dni, :nombre, :apellidos, :direccion, :codpostal, :telefono)');
 
-        $sent->execute([
-            ':dni'      => $dni,
-            ':nombre'      => $nombre,
-            ':apellidos'      => $apellidos,
-            ':direccion'      => $direccion,
-            ':codpostal'      => $codpostal,
-            ':telefono'      => $telefono
-        ]);
+            $sent->execute([
+                ':dni'      => $dni,
+                ':nombre'      => $nombre,
+                ':apellidos'      => $apellidos,
+                ':direccion'      => $direccion,
+                ':codpostal'      => $codpostal,
+                ':telefono'      => $telefono
+            ]);
 
-        return volver_index();
+            return volver_index();
     } else {
         mostrar_errores($error);
-    }
+    }}
 
     ?>
 
