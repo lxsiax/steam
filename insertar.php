@@ -24,6 +24,7 @@
         validar_apellido($apellidos, $error);
         validar_direccion($direccion, $error); 
         validar_codpostal($codpostal, $error); 
+        validar_telefono($telefono, $error);
 
         $con = conectar();
         $sent = $con->prepare('INSERT INTO clientes (dni,nombre, apellidos, direccion, codpostal,telefono)
@@ -39,23 +40,25 @@
         ]);
 
         return volver_index();
+    } else {
+        mostrar_errores($error);
     }
 
     ?>
 
     <form action="" method="post">
         <label for="dni">DNI*</label>
-        <input type="text" id="dni" name="dni"> <br>
+        <input type="text" id="dni" name="dni" value="<?= $dni ?>" > <br>
         <label for="nombre">Nombre*</label>
-        <input type="text" id="nombre" name="nombre"><br>
+        <input type="text" id="nombre" name="nombre" value="<?= $nombre ?>"><br>
         <label for="apellidos">Apellidos</label>
-        <input type="text" id="apellidos" name="apellidos"><br>
+        <input type="text" id="apellidos" name="apellidos" value="<?= $apellidos ?>"><br>
         <label for="direccion">Dirección</label>
-        <input type="text" id="direccion" name="direccion"><br>
+        <input type="text" id="direccion" name="direccion" value="<?= $direccion ?>"><br>
         <label for="codpostal">Código postal*</label>
-        <input type="text" id="codpostal" name="codpostal"><br>
+        <input type="text" id="codpostal" name="codpostal" value="<?= $codpostal ?>"><br>
         <label for="telefono">Teléfono</label>
-        <input type="text" id="telefono" name="telefono"><br>
+        <input type="text" id="telefono" name="telefono" value="<?= $telefono ?>"><br>
         <button type="submit">Insertar</button>
     </form>
 </body>

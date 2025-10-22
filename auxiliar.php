@@ -18,7 +18,12 @@ function validar_dni($dni, &$error){
         } elseif (mb_strlen($dni)>9){
             $error[] = 'El DNI es demasiado largo';
         } else {
-            //Comprobar si es valido
+            $pdo = conectar();
+            $sent = $pdo->prepare('SELECT * FROM clientes WHERE dni= = :dni');
+            $sent->execute([':dni' => $dni]);
+            if ($sent->fetch()){
+                $error[] = "Ya existe un cliente con ese DNI";
+            }
         }
 }
 
@@ -64,7 +69,7 @@ function validar_telefono($telefono, &$error){
     }
 }
 
-function mostrar_errores(array $error):void{
+function mostrar_errores(&$error){
             foreach($error as $k => $v){ ?>
                 <h3>Error: <?= $v ?> </h3><?php
             }
