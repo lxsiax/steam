@@ -1,61 +1,61 @@
+-- Tabla de usuarios
+
+DROP TABLE IF EXISTS usuarios CASCADE;
+
+CREATE TABLE usuarios (
+    id       BIGSERIAL    PRIMARY KEY,
+    nick     VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
 -- Tabla de clientes de la tienda online
 
-DROP TABLE IF EXISTS cliente CASCADE; 
-DROP TABLE IF EXISTS desarrolladora CASCADE; 
-DROP TABLE IF EXISTS cliente_juego CASCADE; 
-DROP TABLE IF EXISTS juego CASCADE; 
+DROP TABLE IF EXISTS clientes CASCADE;
 
--- Tabla de desarroladoras 
-
-CREATE TABLE desarrolladora (
-    id      BIGSERIAL       PRIMARY KEY,
-    nombre  VARCHAR(255)    NOT NULL
+CREATE TABLE clientes (
+    id        BIGSERIAL     PRIMARY KEY,
+    dni       VARCHAR(9)    NOT NULL UNIQUE,
+    nombre    VARCHAR(255)  NOT NULL,
+    apellidos VARCHAR(255),
+    direccion VARCHAR(255),
+    codpostal NUMERIC(5),
+    telefono  VARCHAR(255)
 );
 
---Tabla de juegos 
+-- Tabla de desarrolladoras
 
-CREATE TABLE juego (
-    id                  BIGSERIAL       PRIMARY KEY,
-    nombre              VARCHAR(255)    NOT NULL,
-    genero              VARCHAR(255)    NOT NULL,
-    fPublicacion        TIMESTAMP       NOT NULL,
-    precio              NUMERIC(6,2),
-    desarrolladora_id   BIGINT          NOT NULL REFERENCES desarrolladora(id)          
+DROP TABLE IF EXISTS desarrolladoras CASCADE;
+
+CREATE TABLE desarrolladoras (
+    id     BIGSERIAL    PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL
 );
 
--- Tabla de clientes 
+-- Tabla de videojuegos
 
-CREATE TABLE cliente (
-    id          BIGSERIAL       PRIMARY KEY,
-    dni         VARCHAR(9)      NOT NULL UNIQUE,
-    nombre      VARCHAR(255)    NOT NULL,
-    apellidos   VARCHAR(255),
-    direccion   VARCHAR(255),
-    codpostal   NUMERIC(5)      CHECK(codpostal >= 0),
-    telefono    VARCHAR(255)     
-); 
+DROP TABLE IF EXISTS videojuegos CASCADE;
 
---Relacion clientes y juegos que compra 
-CREATE TABLE cliente_juego (
-    idCliente       BIGINT     NOT NULL,
-    idJuego         BIGINT     NOT NULL, 
-    PRIMARY KEY (idCliente, idJuego),
-    FOREIGN KEY (idCliente) REFERENCES cliente(id),
-    FOREIGN KEY (idJuego)   REFERENCES juego(id)
+CREATE TABLE videojuegos (
+    id                BIGSERIAL      PRIMARY KEY,
+    nombre            VARCHAR(255)   NOT NULL,
+    salida            TIMESTAMP(0)   NOT NULL,
+    precio            NUMERIC(6,2),
+    desarrolladora_id BIGINT         NOT NULL REFERENCES desarrolladoras (id)
 );
 
+-- Datos de prueba
 
--- Insercción de datos en las tablas 
+INSERT INTO usuarios (nick, password)
+VALUES ('usuario', crypt('usuario', gen_salt('bf', 10)));
 
-INSERT INTO desarrolladora (nombre)
-VALUES ('Riot Games'),
+INSERT INTO clientes (dni, nombre, apellidos, direccion, codpostal, telefono)
+VALUES ('11111111A', 'Juan', 'Martínez', 'C/. Su casa', 11540, '666555444'),
+       ('22222222B', 'María', 'González', 'C/. Su otra casa', 11550, '555444333');
+
+INSERT INTO desarrolladoras (nombre)
+VALUES ('The Game Kitchen'),
        ('Valve');
 
-INSERT INTO juego (nombre, genero, fPublicacion, precio, desarrolladora_id)
-VALUES ('Valorant', 'FPS', '2018-10-13 23:00:00', 0, (SELECT id FROM desarrolladora WHERE nombre = 'Riot Games') ),
-       ('Phasmophobia', 'Terror', '2015-06-19 14:12:00', 20, (SELECT id FROM desarrolladora WHERE nombre = 'Valve'));
-
-
-INSERT INTO cliente (dni, nombre, apellidos, direccion, codpostal, telefono)
-VALUES ('11111111A', 'Juan', 'Martínez', 'C/Hola, Su casa', 11540,  '666333444'),
-       ('22222222B', 'María', 'González', 'C/Adiós, Su otra casa', 11550, '666777222'); 
+INSERT INTO videojuegos (nombre, salida, precio, desarrolladora_id)
+VALUES ('Blasphemus', '2021-04-20 14:12:00', 39.90, 1),
+       ('Half life 3', '2025-11-30 20:00:00', 59.90, 2);

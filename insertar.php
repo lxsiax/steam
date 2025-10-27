@@ -1,67 +1,70 @@
+<?php session_start() ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>insertar</title>
+    <title>Insertar un nuevo cliente</title>
 </head>
 <body>
     <?php
     require 'auxiliar.php';
 
-    $dni = obtener_post('dni');
-    $nombre = obtener_post('nombre');
+    if (!esta_logueado()) {
+        return;
+    }
+
+    $dni       = obtener_post('dni');
+    $nombre    = obtener_post('nombre');
     $apellidos = obtener_post('apellidos');
     $direccion = obtener_post('direccion');
     $codpostal = obtener_post('codpostal');
-    $telefono = obtener_post('telefono');
+    $telefono  = obtener_post('telefono');
 
-    if (isset($dni,$nombre,$apellidos,$direccion,$codpostal,$telefono)) {
-        // Validación
+    if (isset($dni, $nombre, $apellidos, $direccion, $codpostal, $telefono)) {
+        $pdo = conectar();
         $error = [];
-        validar_dni($dni, $error); 
+        validar_dni($dni, $error, $pdo);
         validar_nombre($nombre, $error);
-        validar_apellido($apellidos, $error);
-        validar_direccion($direccion, $error); 
-        validar_codpostal($codpostal, $error); 
-        validar_telefono($telefono, $error);
+        validar_sanear_apellidos($apellidos, $error);
+        validar_sanear_direccion($direccion, $error);
+        validar_sanear_codpostal($codpostal, $error);
+        validar_sanear_telefono($telefono, $error);
 
         if (empty($error)) {
-            $pdo = conectar();
             $sent = $pdo->prepare('INSERT INTO clientes (dni, nombre, apellidos, direccion, codpostal, telefono)
                                    VALUES (:dni, :nombre, :apellidos, :direccion, :codpostal, :telefono)');
-
             $sent->execute([
-                ':dni'      => $dni,
-                ':nombre'      => $nombre,
-                ':apellidos'      => $apellidos,
-                ':direccion'      => $direccion,
-                ':codpostal'      => $codpostal,
-                ':telefono'      => $telefono
+                ':dni'       => $dni,
+                ':nombre'    => $nombre,
+                ':apellidos' => $apellidos,
+                ':direccion' => $direccion,
+                ':codpostal' => $codpostal,
+                ':telefono'  => $telefono,
             ]);
-
             return volver_index();
+        } else {
+            cabecera();
+            mostrar_errores($error);
+        }
     } else {
-        mostrar_errores($error);
-    }}
-
+        cabecera();
+    }
     ?>
-
     <form action="" method="post">
-        <label for="dni">DNI*</label>
-        <input type="text" id="dni" name="dni" value="<?= $dni ?>" > <br>
-        <label for="nombre">Nombre*</label>
-        <input type="text" id="nombre" name="nombre" value="<?= $nombre ?>"><br>
-        <label for="apellidos">Apellidos</label>
-        <input type="text" id="apellidos" name="apellidos" value="<?= $apellidos ?>"><br>
-        <label for="direccion">Dirección</label>
-        <input type="text" id="direccion" name="direccion" value="<?= $direccion ?>"><br>
-        <label for="codpostal">Código postal*</label>
-        <input type="text" id="codpostal" name="codpostal" value="<?= $codpostal ?>"><br>
-        <label for="telefono">Teléfono</label>
-        <input type="text" id="telefono" name="telefono" value="<?= $telefono ?>"><br>
+        <label for="dni">DNI:* </label>
+        <input type="text" id="dni"       name="dni" value="<?= hh($dni) ?>"><br>
+        <label for="nombre">Nombre:* </label>
+        <input type="text" id="nombre"    name="nombre" value="<?= hh($nombre) ?>"><br>
+        <label for="apellidos">Apellidos: </label>
+        <input type="text" id="apellidos" name="apellidos" value="<?= hh($apellidos) ?>"><br>
+        <label for="direccion">Dirección: </label>
+        <input type="text" id="direccion" name="direccion" value="<?= hh($direccion) ?>"><br>
+        <label for="codpostal">Código postal: </label>
+        <input type="text" id="codpostal" name="codpostal" value="<?= hh($codpostal) ?>"><br>
+        <label for="telefono">Teléfono: </label>
+        <input type="text" id="telefono"  name="telefono" value="<?= hh($telefono) ?>"><br>
         <button type="submit">Insertar</button>
-        <br>
         <a href="index.php">Volver</a>
     </form>
 </body>

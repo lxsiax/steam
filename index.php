@@ -1,3 +1,4 @@
+<?php session_start() ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,66 +9,47 @@
 <body>
     <?php
     require 'auxiliar.php';
+
+    if (!esta_logueado()) {
+        return;
+    }
+
     $pdo = conectar();
     $sent = $pdo->query('SELECT * FROM clientes');
     ?>
-
+    <?php cabecera() ?>
     <table border="1">
         <thead>
             <th>DNI</th>
             <th>Nombre</th>
             <th>Apellidos</th>
             <th>Dirección</th>
-            <th>Código Postal</th>
+            <th>Código postal</th>
             <th>Teléfono</th>
             <th colspan="2">Acciones</th>
         </thead>
         <tbody>
             <?php foreach ($sent as $fila): ?>
-            <tr>
-                <td><?= $fila['dni'] ?></td>
-                <td><?= $fila['nombre'] ?></td>
-                <td><?= $fila['apellidos'] ?></td>
-                <td><?= $fila['direccion'] ?></td>
-                <td><?= $fila['codpostal'] ?></td>
-                <td><?= $fila['telefono'] ?></td>
-                <td>
-                    <form action="borrar.php" method="post">
-                        <input type="hidden" name="id" value="<?= $fila['id'] ?>">
-                        <button type="submit">Borrar</button>
-                    </form>    
-                </td>
-                <td>
-                    <a href="modificar.php?id=<?= $fila['id']?>">Modificar</a>
-                </td>
-            </tr>
+                <tr>
+                    <td><?= hh($fila['dni']) ?></td>
+                    <td><?= hh($fila['nombre']) ?></td>
+                    <td><?= hh($fila['apellidos']) ?></td>
+                    <td><?= hh($fila['direccion']) ?></td>
+                    <td><?= hh($fila['codpostal']) ?></td>
+                    <td><?= hh($fila['telefono']) ?></td>
+                    <td>
+                        <form action="borrar.php" method="post">
+                            <input type="hidden" name="id" value="<?= hh($fila['id']) ?>">
+                            <button type="submit">Borrar</button>
+                        </form>
+                    </td>
+                    <td>
+                        <a href="modificar.php?id=<?= hh($fila['id']) ?>">Modificar</a>
+                    </td>
+                </tr>
             <?php endforeach ?>
         </tbody>
     </table>
-    <br>
-    <?php 
-    $juegos = $pdo->query('SELECT * FROM juego');
-    ?>
-
-    <table border="1" >
-        <thead>
-            <th>Nombre</th>
-            <th>Género</th>
-            <th>Fecha y hora publicación</th>
-            <th>Precio</th>
-        </thead>
-        <tbody>
-            <?php foreach ($juegos as $filajuego): ?>
-            <tr>
-                <td><?= $filajuego['nombre']?></td>
-                <td><?= $filajuego['genero']?></td>
-                <td><?= $filajuego['fpublicacion']?></td>
-                <td><?= $filajuego['precio']?></td>
-            </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
-    <br>    
     <a href="insertar.php">Insertar un nuevo cliente</a>
 </body>
 </html>
