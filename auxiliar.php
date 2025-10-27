@@ -159,6 +159,3 @@ function campo_csrf(){
     ?> <input type="hidden" value="<?=token_csrf()?>" name="_csrf"> <?php
 }
 
-function valor_csrf(){
-     $_csrf = obtener_post('_csrf');
-}
