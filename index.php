@@ -9,10 +9,14 @@
 <body>
     <?php
     require 'auxiliar.php';
+    require 'Cliente.php';
 
     if (!esta_logueado()) {
         return;
     }
+
+    $cliente = new Cliente; 
+    $cliente->id = 100;
 
     $pdo = conectar();
     $sent = $pdo->query('SELECT * FROM clientes');
