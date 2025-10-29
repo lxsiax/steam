@@ -67,8 +67,10 @@
                     ':codpostal' => $codpostal,
                     ':telefono'  => $telefono,
                 ]);
+                $_SESSION['exito'] = 'Cliente modificado correctamente';
                 return volver_index();
             } else {
+                $_SESSION['fallo'] = 'No se ha podido modificar el cliente';
                 mostrar_errores($error);
             }
         }
