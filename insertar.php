@@ -9,6 +9,7 @@
 <body>
     <?php
     require 'auxiliar.php';
+    require 'Cliente.php';
 
     if (!esta_logueado()) {
         return;
@@ -28,7 +29,7 @@
         if (!comprobar_csrf($_csrf)){
             return volver_index();
         }
-        $pdo = conectar();
+        $pdo = Cliente::pdo();
         $pdo->beginTransaction();
         $pdo->exec('LOCK TABLE clientes IN SHARE MODE;');
         $error = [];
@@ -40,16 +41,15 @@
         validar_sanear_telefono($telefono, $error);
 
         if (empty($error)) {
-            $sent = $pdo->prepare('INSERT INTO clientes (dni, nombre, apellidos, direccion, codpostal, telefono)
-                                   VALUES (:dni, :nombre, :apellidos, :direccion, :codpostal, :telefono)');
-            $sent->execute([
-                ':dni'       => $dni,
-                ':nombre'    => $nombre,
-                ':apellidos' => $apellidos,
-                ':direccion' => $direccion,
-                ':codpostal' => $codpostal,
-                ':telefono'  => $telefono,
+            $cliente = new Cliente([
+                'dni'       => $dni,
+                'nombre'    => $nombre,
+                'apellidos' => $apellidos,
+                'direccion' => $direccion,
+                'codpostal' => $codpostal,
+                'telefono'  => $telefono,
             ]);
+            $cliente->guardar();
             $pdo->commit();
             $_SESSION['exito'] = 'Cliente insertado correctamente';
             return volver_index();
