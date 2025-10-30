@@ -15,11 +15,6 @@
         return;
     }
 
-    $cliente = new Cliente; 
-    $cliente->id = 100;
-
-    $pdo = conectar();
-    $sent = $pdo->query('SELECT * FROM clientes');
     ?>
     <?php cabecera() ?>
     <table border="1">
@@ -33,23 +28,23 @@
             <th colspan="2">Acciones</th>
         </thead>
         <tbody>
-            <?php foreach ($sent as $fila): ?>
+            <?php foreach (Cliente::todos() as $cliente): ?>
                 <tr>
-                    <td><?= hh($fila['dni']) ?></td>
-                    <td><?= hh($fila['nombre']) ?></td>
-                    <td><?= hh($fila['apellidos']) ?></td>
-                    <td><?= hh($fila['direccion']) ?></td>
-                    <td><?= hh($fila['codpostal']) ?></td>
-                    <td><?= hh($fila['telefono']) ?></td>
+                    <td><?= hh($cliente->dni) ?></td>
+                    <td><?= hh($cliente->nombre) ?></td>
+                    <td><?= hh($cliente->apellidos) ?></td>
+                    <td><?= hh($cliente->direccion) ?></td>
+                    <td><?= hh($cliente->codpostal) ?></td>
+                    <td><?= hh($cliente->telefono) ?></td>
                     <td>
                         <form action="borrar.php" method="post">
                             <?php campo_csrf(); ?>
-                            <input type="hidden" name="id" value="<?= hh($fila['id']) ?>">
+                            <input type="hidden" name="id" value="<?= hh($cliente->id) ?>">
                             <button type="submit">Borrar</button>
                         </form>
                     </td>
                     <td>
-                        <a href="modificar.php?id=<?= hh($fila['id']) ?>">Modificar</a>
+                        <a href="modificar.php?id=<?= hh($cliente->id) ?>">Modificar</a>
                     </td>
                 </tr>
             <?php endforeach ?>
