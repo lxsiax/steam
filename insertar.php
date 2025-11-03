@@ -10,6 +10,7 @@
     <?php
     require_once 'auxiliar.php';
     require_once 'Cliente.php';
+    use AR\Cliente;
 
     if (!esta_logueado()) {
         return;

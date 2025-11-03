@@ -1,10 +1,10 @@
 <?php
-
+namespace F;
 require 'Cadenas.php';
 
 class Fichero
 {
-    use Cadenas;
+    use \Utilidades\Cadenas;
 
     public function __construct()
     {

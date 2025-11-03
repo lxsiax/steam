@@ -1,4 +1,6 @@
-<?php session_start() ?>
+<?php 
+namespace App;
+session_start() ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,18 +13,13 @@
     require_once 'auxiliar.php';
     require_once 'Cliente.php';
     require_once 'Guardable.php';
+    require_once 'Cadenas.php';
+
+    use AR\Cliente;
 
     if (!esta_logueado()) {
         return;
     }
-
-    $cliente12 = Cliente::buscar_por_id(1);
-
-    function x(Guardable $g){
-        $g->guardar();
-    }
-
-    x($cliente12);
 
     ?>
     <?php cabecera() ?>
