@@ -8,16 +8,14 @@
 </head>
 <body>
     <?php
-    require 'auxiliar.php';
-    require 'Cliente.php';
+    require_once 'auxiliar.php';
+    require_once 'Cliente.php';
 
     if (!esta_logueado()) {
         return;
     }
 
-    $csrf = token_csrf();
-
-    $_csrf = obtener_post('_csrf'); 
+    $_csrf     = obtener_post('_csrf');
     $dni       = obtener_post('dni');
     $nombre    = obtener_post('nombre');
     $apellidos = obtener_post('apellidos');
@@ -25,15 +23,15 @@
     $codpostal = obtener_post('codpostal');
     $telefono  = obtener_post('telefono');
 
-    if (isset($dni, $nombre, $apellidos, $direccion, $codpostal, $telefono,$_csrf)) {
-        if (!comprobar_csrf($_csrf)){
+    if (isset($_csrf, $dni, $nombre, $apellidos, $direccion, $codpostal, $telefono)) {
+        if (!comprobar_csrf($_csrf)) {
             return volver_index();
         }
         $pdo = Cliente::pdo();
         $pdo->beginTransaction();
         $pdo->exec('LOCK TABLE clientes IN SHARE MODE;');
         $error = [];
-        validar_dni($dni, $error, $pdo);
+        validar_dni($dni, $error);
         validar_nombre($nombre, $error);
         validar_sanear_apellidos($apellidos, $error);
         validar_sanear_direccion($direccion, $error);
@@ -51,11 +49,11 @@
             ]);
             $cliente->guardar();
             $pdo->commit();
-            $_SESSION['exito'] = 'Cliente insertado correctamente';
+            $_SESSION['exito'] = 'El cliente se ha insertado correctamente';
             return volver_index();
         } else {
             $pdo->rollBack();
-            $_SESSION['fallo'] = 'El cliente no se pudo insertar';
+            // $_SESSION['fallo'] = 'No se ha podido insertar el cliente';
             cabecera();
             mostrar_errores($error);
         }
@@ -64,7 +62,7 @@
     }
     ?>
     <form action="" method="post">
-        <?php campo_csrf(); ?>
+        <?php campo_csrf() ?>
         <label for="dni">DNI:* </label>
         <input type="text" id="dni"       name="dni" value="<?= hh($dni) ?>"><br>
         <label for="nombre">Nombre:* </label>

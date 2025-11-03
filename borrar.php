@@ -1,15 +1,15 @@
 <?php
 session_start();
 
-require 'auxiliar.php';
-require 'Cliente.php';
+require_once 'auxiliar.php';
+require_once 'Cliente.php';
 
 if (!esta_logueado()) {
     return;
 }
 
 if ($_SESSION['nick'] != 'admin') {
-    $_SESSION['fallo'] = 'No tienes permiso para borrar un cliente';
+    $_SESSION['fallo'] = 'No tiene permiso para borrar un cliente';
     return volver_index();
 }
 
@@ -21,9 +21,8 @@ if (isset($id, $_csrf)) {
     if (!comprobar_csrf($_csrf)) {
         return volver_index();
     }
-    $cliente = Cliente::buscar_por_id($id)?->borrar();
+    Cliente::borrar_por_id($id);
     $_SESSION['exito'] = 'El cliente se ha borrado correctamente';
-
 }
 
 header('Location: index.php');

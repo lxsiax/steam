@@ -8,12 +8,21 @@
 </head>
 <body>
     <?php
-    require 'auxiliar.php';
-    require 'Cliente.php';
+    require_once 'auxiliar.php';
+    require_once 'Cliente.php';
+    require_once 'Guardable.php';
 
     if (!esta_logueado()) {
         return;
     }
+
+    $cliente12 = Cliente::buscar_por_id(1);
+
+    function x(Guardable $g){
+        $g->guardar();
+    }
+
+    x($cliente12);
 
     ?>
     <?php cabecera() ?>
@@ -38,7 +47,7 @@
                     <td><?= hh($cliente->telefono) ?></td>
                     <td>
                         <form action="borrar.php" method="post">
-                            <?php campo_csrf(); ?>
+                            <?php campo_csrf() ?>
                             <input type="hidden" name="id" value="<?= hh($cliente->id) ?>">
                             <button type="submit">Borrar</button>
                         </form>

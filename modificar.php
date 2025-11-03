@@ -8,12 +8,12 @@
 </head>
 <body>
     <?php
-    require 'auxiliar.php';
+    require_once 'auxiliar.php';
+    require_once 'Cliente.php';
 
     if (!esta_logueado()) {
         return;
     }
-
 
     $id = obtener_get('id');
 
@@ -21,15 +21,15 @@
         return volver_index();
     }
 
-    $pdo = conectar();
-    $fila = buscar_cliente($id, $pdo);
+    $cliente = Cliente::buscar_por_id($id);
 
-    if (!$fila) {
+    if (!$cliente) {
+        $_SESSION['fallo'] = 'El cliente a modificar no existe';
         return volver_index();
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $_csrf = obtener_post('_csrf');
+        $_csrf     = obtener_post('_csrf');
         $dni       = obtener_post('dni');
         $nombre    = obtener_post('nombre');
         $apellidos = obtener_post('apellidos');
@@ -37,12 +37,12 @@
         $codpostal = obtener_post('codpostal');
         $telefono  = obtener_post('telefono');
 
-        if (isset($dni, $_csrf, $nombre, $apellidos, $direccion, $codpostal, $telefono)) {
-            if (!comprobar_csrf($_csrf)){
+        if (isset($_csrf, $dni, $nombre, $apellidos, $direccion, $codpostal, $telefono)) {
+            if (!comprobar_csrf($_csrf)) {
                 return volver_index();
             }
             $error = [];
-            validar_dni_update($dni, $id, $error, $pdo);
+            validar_dni_update($dni, $id, $error);
             validar_nombre($nombre, $error);
             validar_sanear_apellidos($apellidos, $error);
             validar_sanear_direccion($direccion, $error);
@@ -50,24 +50,14 @@
             validar_sanear_telefono($telefono, $error);
 
             if (empty($error)) {
-                $sent = $pdo->prepare('UPDATE clientes
-                                          SET dni = :dni,
-                                              nombre = :nombre,
-                                              apellidos = :apellidos,
-                                              direccion = :direccion,
-                                              codpostal = :codpostal,
-                                              telefono = :telefono
-                                        WHERE id = :id');
-                $sent->execute([
-                    ':id'        => $id,
-                    ':dni'       => $dni,
-                    ':nombre'    => $nombre,
-                    ':apellidos' => $apellidos,
-                    ':direccion' => $direccion,
-                    ':codpostal' => $codpostal,
-                    ':telefono'  => $telefono,
-                ]);
-                $_SESSION['exito'] = 'Cliente modificado correctamente';
+                $cliente->dni       = $dni;
+                $cliente->nombre    = $nombre;
+                $cliente->apellidos = $apellidos;
+                $cliente->direccion = $direccion;
+                $cliente->codpostal = $codpostal;
+                $cliente->telefono  = $telefono;
+                $cliente->guardar();
+                $_SESSION['exito'] = 'El cliente se ha modificado correctamente';
                 return volver_index();
             } else {
                 $_SESSION['fallo'] = 'No se ha podido modificar el cliente';
@@ -75,13 +65,14 @@
             }
         }
     } else {
+        $fila = (array) $cliente;
         extract($fila);
     }
 
     ?>
     <?php cabecera() ?>
     <form action="" method="post">
-        <?php campo_csrf(); ?>
+        <?php campo_csrf() ?>
         <label for="dni">DNI:* </label>
         <input type="text" id="dni"       name="dni" value="<?= hh($dni) ?>"><br>
         <label for="nombre">Nombre:* </label>
