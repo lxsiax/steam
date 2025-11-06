@@ -21,7 +21,7 @@ if (isset($id, $_csrf)) {
     if (!comprobar_csrf($_csrf)) {
         return volver_index();
     }
-    Cliente::borrar_por_id($id);
+    \AR\Cliente::borrar_por_id($id);
     $_SESSION['exito'] = 'El cliente se ha borrado correctamente';
 }
 

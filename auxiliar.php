@@ -1,5 +1,4 @@
 <?php
-
 require_once 'Cliente.php';
 
 function conectar()
@@ -29,7 +28,7 @@ function validar_dni($dni, &$error)
     } elseif (mb_strlen($dni) > 9) {
         $error[] = 'El DNI es demasiado largo';
     } else {
-        if (Cliente::buscar_por_dni($dni)) {
+        if (\AR\Cliente::buscar_por_dni($dni)) {
             $error[] = 'Ya existe un cliente con ese DNI';
         }
     }
@@ -96,7 +95,7 @@ function validar_dni_update($dni, $id, &$error)
     } elseif (mb_strlen($dni) > 9) {
         $error[] = 'El DNI es demasiado largo';
     } else {
-        $cliente = Cliente::buscar_por_dni($dni);
+        $cliente = \AR\Cliente::buscar_por_dni($dni);
         if ($cliente && $cliente->id != $id) {
             $error[] = 'Ya existe un cliente con ese DNI';
         }
@@ -117,7 +116,7 @@ function cabecera()
     <?php if (isset($_SESSION['fallo'])): ?>
         <h3><?= $_SESSION['fallo'] ?></h3>
         <?php unset($_SESSION['fallo']) ?>
-    <?php endif ?><?php
+    <?php endif ?><?php 
 }
 
 function esta_logueado()

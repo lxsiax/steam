@@ -2,14 +2,18 @@
 
 namespace AR;
 
+use Utilidades\Cadenas;
+use Utilidades\Guardable;
+use PDO;
+
 require_once 'Guardable.php';
 require_once 'Cadenas.php';
 
-abstract class ActiveRecord implements \Utilidades\Guardable
+abstract class ActiveRecord implements Guardable
 {
-    use \Utilidades\Cadenas;
+    use Cadenas;
     public $id;
-    private static \PDO $pdo;
+    private static PDO $pdo;
     protected static string $tabla;
 
     public function __construct(array $fila = [])
@@ -46,7 +50,7 @@ abstract class ActiveRecord implements \Utilidades\Guardable
         $pdo = static::pdo();
         $tabla = static::$tabla;
         $sent = $pdo->query("SELECT * FROM $tabla");
-        return $sent->fetchAll(\PDO::FETCH_CLASS, static::class);
+        return $sent->fetchAll(PDO::FETCH_CLASS, static::class);
     }
 
     public abstract function guardar(): void;
@@ -56,7 +60,7 @@ abstract class ActiveRecord implements \Utilidades\Guardable
         static::buscar_por_id($id)?->borrar();
     }
 
-    public static function pdo(): \PDO
+    public static function pdo(): PDO
     {
         static::$pdo = static::$pdo ?? conectar();
         return static::$pdo;

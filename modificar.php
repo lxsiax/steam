@@ -21,7 +21,7 @@
         return volver_index();
     }
 
-    $cliente = Cliente::buscar_por_id($id);
+    $cliente = \AR\Cliente::buscar_por_id($id);
 
     if (!$cliente) {
         $_SESSION['fallo'] = 'El cliente a modificar no existe';
