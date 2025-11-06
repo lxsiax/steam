@@ -1,5 +1,4 @@
 <?php
-require_once 'Cliente.php';
 
 function conectar()
 {

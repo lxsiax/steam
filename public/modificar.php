@@ -8,8 +8,8 @@
 </head>
 <body>
     <?php
-    require_once 'auxiliar.php';
-    require_once 'Cliente.php';
+    require_once '../src/auxiliar.php';
+    require_once '../src/Cliente.php';
 
     if (!esta_logueado()) {
         return;
