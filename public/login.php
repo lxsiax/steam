@@ -8,7 +8,7 @@
 </head>
 <body>
     <?php
-    require '../src/auxiliar.php';
+    require '../vendor/autoload.php';
 
     $_csrf = obtener_post('_csrf');
     $nick = obtener_post('nick');

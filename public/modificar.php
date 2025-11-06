@@ -8,8 +8,10 @@
 </head>
 <body>
     <?php
-    require_once '../src/auxiliar.php';
-    require_once '../src/Cliente.php';
+    require_once '../vendor/autoload.php';
+    require_once '../src/AR/Cliente.php';
+
+    use App\AR\Cliente;
 
     if (!esta_logueado()) {
         return;
@@ -21,7 +23,7 @@
         return volver_index();
     }
 
-    $cliente = \AR\Cliente::buscar_por_id($id);
+    $cliente = Cliente::buscar_por_id($id);
 
     if (!$cliente) {
         $_SESSION['fallo'] = 'El cliente a modificar no existe';

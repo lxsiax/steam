@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-require_once 'auxiliar.php';
-require_once 'Cliente.php';
+require '../vendor/autoload.php';
+use App\AR\Cliente;
 
 if (!esta_logueado()) {
     return;
@@ -21,7 +21,7 @@ if (isset($id, $_csrf)) {
     if (!comprobar_csrf($_csrf)) {
         return volver_index();
     }
-    \AR\Cliente::borrar_por_id($id);
+    Cliente::borrar_por_id($id);
     $_SESSION['exito'] = 'El cliente se ha borrado correctamente';
 }
 

@@ -8,9 +8,9 @@
 </head>
 <body>
     <?php
-    require_once 'auxiliar.php';
-    require_once 'Cliente.php';
-    use AR\Cliente;
+    require_once '../vendor/autoload.php';
+    use App\AR\Cliente;
+
 
     if (!esta_logueado()) {
         return;

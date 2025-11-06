@@ -1,4 +1,7 @@
 <?php
+require '../vendor/autoload.php';
+
+use App\AR\Cliente;
 
 function conectar()
 {
@@ -27,7 +30,7 @@ function validar_dni($dni, &$error)
     } elseif (mb_strlen($dni) > 9) {
         $error[] = 'El DNI es demasiado largo';
     } else {
-        if (\AR\Cliente::buscar_por_dni($dni)) {
+        if (Cliente::buscar_por_dni($dni)) {
             $error[] = 'Ya existe un cliente con ese DNI';
         }
     }
@@ -94,7 +97,7 @@ function validar_dni_update($dni, $id, &$error)
     } elseif (mb_strlen($dni) > 9) {
         $error[] = 'El DNI es demasiado largo';
     } else {
-        $cliente = \AR\Cliente::buscar_por_dni($dni);
+        $cliente = Cliente::buscar_por_dni($dni);
         if ($cliente && $cliente->id != $id) {
             $error[] = 'Ya existe un cliente con ese DNI';
         }

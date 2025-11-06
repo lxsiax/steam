@@ -1,6 +1,4 @@
-<?php 
-namespace App;
-session_start() ?>
+<?php session_start() ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,8 +8,8 @@ session_start() ?>
 </head>
 <body>
     <?php
+    
     require '../vendor/autoload.php';
-    require_once '../src/auxiliar.php';
 
     use App\AR\Cliente;
 
